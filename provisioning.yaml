@@ -1,0 +1,40 @@
+#na linha "- hosts: all" especifica em qual host do seu arquivo de inventarios hosts o ansible ira
+# aplicar a tarefa seguinte, no caso passamos all mas poderiamos passar um ip especifico !nao passe o nome do grupo n!
+# comando passado para o ansible executar este arquivo neste diretório
+# $ ansible-playbook provisioning.yaml  -u vagrant -i hosts --private-key .vagrant/machines/worker/virtualbox/private_key 
+# parametro -u passa o usuário de acesso a máquina, parametro -i passa o arquivo de inventario "hosts"
+#parametro --private-key passa o path da chave privade de acesso via ssh para a maquina
+# obs: este arquivo de configuração sempre deverá iniciar com o "---" na primeira linha, exatamente como abaixo
+
+---
+- hosts: all
+  tasks:
+    - shell: apt update
+      become: yes
+
+    - name: 'Instalando pacotes de dependencia do Visual Studio Code'
+      apt:
+        name: ['software-properties-common', 'apt-transport-https', 'wget']
+        state: latest
+      become: yes
+    - shell: wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add - && sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" && apt update
+      become: yes
+    - name: 'Instalando Visual Studio Code'
+      apt:
+        name: code
+        state: latest
+      become: yes
+
+#    - name: 'Instalando o AWS-CLI'
+    - shell: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && sudo ./aws/install
+      become: yes
+
+    - name: 'Instalando Dependencias Anaconda para SSO com a AWS'
+      apt:
+        name: ['libgl1-mesa-glx', 'libegl1-mesa', 'libxrandr2', 'libxrandr2', 'libxss1', 'libxcursor1', 'libxcomposite1', 'libasound2', 'libxi6', 'libxtst6']
+        state: latest
+      become: yes
+
+    - name: 'Instalando o Zip do Anaconda e Executando'
+      shell: wget https://repo.anaconda.com/archive/Anaconda3-2020.07-Linux-x86_64.sh #Guia de referência https://www.anaconda.com/products/individual#linux
+      become: yes

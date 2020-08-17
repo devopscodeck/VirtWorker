@@ -1,0 +1,14 @@
+# Arquivo de inventário, coloque aqui todas as informações que o ansible precisa para acessar o guest
+#comando :  "ansible -vvvv worker -u vagrant --private-key .vagrant/machines/worker/virtualbox/private_key -i hosts  -m shell -a 'echo Hello, World'"
+# o comando acima executa este arquivo com o ansible passa o path da chave ssh chama o modulo "-m shell" e passa o parametro -a "echo hello world"
+#assim ele entra na guest e consegue executar o comando passado
+
+
+#--------------------------------------------------------------------------------------------------
+# [worker]  -> nome do grupo, necessario para que ansible saiba qual maquina ele deverá se conectar
+#  192.168.0.45 -> ip da maquina que sera acessada.
+#variavel ansible_user=vagrant voce poderá omitir "-u vagrant" no comando da linha 2
+#variavel ansible_ssh_private_key_file voce podera omitir "--private-key" no comando da linha 2
+
+[worker]
+192.168.0.45 ansible_user=vagrant ansible_ssh_private_key_file=".vagrant/machines/worker/virtualbox/private_key"
